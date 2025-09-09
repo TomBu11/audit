@@ -1,0 +1,17 @@
+VERSIONS = NORMAL ACTION1 ACTION1_DATA_SOURCE ACTION1_CUSTOM_ATTRIBUTES
+
+define FLAGS
+NORMAL=
+ACTION1=-DNO_INPUT
+ACTION1_DATA_SOURCE=-DNO_INPUT -DNO_OUTPUT -DDATA_SOURCE
+ACTION1_CUSTOM_ATTRIBUTES=-DNO_INPUT -DNO_OUTPUT -DCUSTOM_ATTRIBUTES
+endef
+export FLAGS
+
+build/audit_%.ps1: src/audit.ps1.in
+	cpp -P $(FLAGS_$*) audit.ps1.in > $@
+
+all: $(VERSIONS:%=build/audit_%.ps1)
+
+clean:
+	rm -f build/audit_*.ps1
