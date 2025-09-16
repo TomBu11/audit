@@ -69,9 +69,7 @@ net accounts /lockoutduration:30 | Out-Null
 Write-Out "`n=== Output ===`n" -ForegroundColor DarkYellow
 
 if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?")) {
-  if ($notes -ne "") {
-    $notes += "; "
-  }
+  $notes = if ($notes) { "$notes; " } else { "" }
   $notes += "Warnings: $($warnings -join ', ')"
 }
 
