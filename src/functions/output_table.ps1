@@ -35,11 +35,3 @@ $outTable = [PSCustomObject]@{
   SoftwareValid   = $softwareValid
   Notes           = $notes
 }
-
-$line = ($outTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"
-
-Write-Out "`nTab-separated Line:`n" -ForegroundColor DarkYellow
-Write-Out $line
-
-Write-Out "`n=== Vertical Table ===`n" -ForegroundColor DarkYellow
-$outTable | Format-List

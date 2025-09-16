@@ -3,7 +3,7 @@ function Write-Out {
     [string]$Message,
     [ConsoleColor]$Color = "White"
   )
-  //ifdef INPUT
+  //ifdef OUTPUT
   Write-Host $Message -ForegroundColor $Color
   //endif
 }

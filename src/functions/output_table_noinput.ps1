@@ -1,5 +1,3 @@
-
-
 $outTable = [PSCustomObject]@{
   Date            = $date
   PCName          = $env:COMPUTERNAME
