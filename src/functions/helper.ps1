@@ -1,10 +1,10 @@
 function Write-Out {
   param (
     [string]$Message,
-    [ConsoleColor]$Color = "White"
+    [ConsoleColor]$ForegroundColor = "White"
   )
   //ifdef OUTPUT
-  Write-Host $Message -ForegroundColor $Color
+  Write-Host $Message -ForegroundColor $ForegroundColor
   //endif
 }
 

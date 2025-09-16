@@ -1,12 +1,6 @@
 #Requires -RunAsAdministrator
 
-Write-Out "Audit script version 1.1.0`n" -ForegroundColor Green
-
 //include "functions/hardware_readiness.ps1"
-
-<# OPTIONS #>
-
-$rocksaltPath = "C:\Rocksalt"
 
 <# HELPER FUNCTIONS #>
 
@@ -14,15 +8,19 @@ $rocksaltPath = "C:\Rocksalt"
 
 <# INITIAL SETUP #>
 
+Write-Out "Audit script version 1.1.0`n" -ForegroundColor Green
+
 $warnings = @()
 
-# Ensure directory exists
+$rocksaltPath = "C:\Rocksalt"
+
+# Ensure rocksalt directory exists
 if (-not (Test-Path -Path $rocksaltPath)) {
   New-Item -ItemType Directory -Path $rocksaltPath | Out-Null
-  Write-Out "Output directory created: $rocksaltPath"
+  Write-Out "Rocksalt directory created: $rocksaltPath"
 }
 else {
-  Write-Out "Output directory already exists: $rocksaltPath"
+  Write-Out "Rocksalt directory already exists: $rocksaltPath"
 }
 
 

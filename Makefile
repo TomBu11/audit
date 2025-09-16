@@ -13,7 +13,7 @@ clean:
 build/script/audit_%.ps1: src/audit.ps1.in
 	@echo "\n$*"
 	gpp \
-		-U "//" "" "(" "," ")" "(" ")" "$$" "\\" \
+		-U "//" "" "(" "," ")" "(" ")" "$$" "" \
 		-M "//" "\n" " " " " "\n" "(" ")" \
 		$(FLAGS_$*) \
 		src/audit.ps1.in > $@

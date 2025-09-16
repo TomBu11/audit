@@ -12,7 +12,7 @@ foreach ($path in $outPaths) {
   $line | Out-File -Append -FilePath $auditFile
   Write-Out "Audit information has been appended to $auditFile"
 
-  $bitlockerFile = Join-Path $path $fbitlockerFilename
+  $bitlockerFile = Join-Path $path $bitlockerFilename
   "$bitlockerID`n$bitlockerKey" | Out-File -FilePath $bitlockerFile
   if (Test-Path $bitlockerFile) {
     Write-Out "Bitlocker saved to $bitlockerFile`n"
@@ -21,3 +21,5 @@ foreach ($path in $outPaths) {
     Write-Error "Failed to save Bitlocker info to $bitlockerFile`n"
   }
 }
+
+Read-Host -Prompt "Press Enter to exit"
