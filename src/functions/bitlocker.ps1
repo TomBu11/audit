@@ -6,10 +6,10 @@ if ($bitlocker.ProtectionStatus -eq 1) {
 
   $protector = $bitlocker.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' }
 
-  //ifdef NO_INPUT
-  $bitlockerFilename += "$env:COMPUTERNAME Bitlocker $($protector.KeyProtectorId).txt"
-  //else
+  //ifdef INPUT
   $bitlockerFilename += "$gi $name $env:COMPUTERNAME Bitlocker $($protector.KeyProtectorId).txt"
+  //else
+  $bitlockerFilename += "$env:COMPUTERNAME Bitlocker $($protector.KeyProtectorId).txt"
   //endif
 
   $bitlockerInfo = "$($protector.KeyProtectorId)`n$($protector.RecoveryPassword)"

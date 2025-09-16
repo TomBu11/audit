@@ -1,4 +1,4 @@
-$lineTable = [PSCustomObject]@{
+$outTable = [PSCustomObject]@{
   Auditer         = $auditer
   Date            = $date
   Done            = "Part"
@@ -36,10 +36,10 @@ $lineTable = [PSCustomObject]@{
   Notes           = $notes
 }
 
-$line = ($lineTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"
+$line = ($outTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"
 
 Write-Out "`nTab-separated Line:`n" -ForegroundColor DarkYellow
 Write-Out $line
 
 Write-Out "`n=== Vertical Table ===`n" -ForegroundColor DarkYellow
-$lineTable | Format-List
+$outTable | Format-List

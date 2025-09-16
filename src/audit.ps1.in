@@ -56,7 +56,7 @@ net accounts /lockoutduration:30 | Out-Null
 
 <# AUDITER INPUT #>
 
-//ifndef NO_INPUT
+//ifdef INPUT
 //include "functions/audit_input.ps1"
 //endif
 
@@ -77,35 +77,23 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
   $notes += "Warnings: $($warnings -join ', ')"
 }
 
-//ifdef NO_INPUT
-//include "functions/output_table_noinput.ps1"
-//else
+//ifdef INPUT
 //include "functions/output_table.ps1"
+//else
+//include "functions/output_table_noinput.ps1"
 //endif
 
 
 <# SAVE OUTPUT #>
 
-Write-Out "`n=== Saving output ===`n" -ForegroundColor DarkYellow
+//ifdef OUTPUT
+//include "functions/output.ps1"
+//endif
 
-$scriptPath = Split-Path -Parent ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
-Write-Out "Script directory: $scriptPath"
-$outPaths = @(
-  $scriptPath
-  $rocksaltPath
-) | Select-Object -Unique
+//ifdef DATA_SOURCE
+//include "functions/data_source.ps1"
+//endif
 
-foreach ($path in $outPaths) {
-  $auditFile = Join-Path $path "Audit.txt"
-  $line | Out-File -Append -FilePath $auditFile
-  Write-Out "Audit information has been appended to $auditFile"
-
-  $bitlockerFile = Join-Path $path $fbitlockerFilename
-  $bitlockerInfo | Out-File -FilePath $bitlockerFile
-  if (Test-Path $bitlockerFile) {
-    Write-Out "Bitlocker saved to $bitlockerFile`n"
-  }
-  else {
-    Write-Error "Failed to save Bitlocker info to $bitlockerFile`n"
-  }
-}
+//ifdef CUSTOM_ATTRIBUTES
+//include "functions/custom_attributes.ps1"
+//endif

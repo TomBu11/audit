@@ -1,6 +1,6 @@
 
 
-$lineTable = [PSCustomObject]@{
+$outTable = [PSCustomObject]@{
   Date            = $date
   PCName          = $env:COMPUTERNAME
   Manufacturer    = $manufacturer

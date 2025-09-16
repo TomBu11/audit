@@ -1,7 +1,7 @@
 Write-Out "`n=== Checking for Rocksalt User ===`n" -ForegroundColor DarkYellow
 
 function Add-RocksaltUser {
-  //ifndef NO_INPUT
+  //ifdef INPUT
   if (Read-Y "Create local Rocksalt user?") {
     $password = Read-Host "Enter password" -AsSecureString
     New-LocalUser -Name "Rocksalt" -Password $password -FullName "Rocksalt" -Description "Rocksalt" | Out-Null
@@ -10,7 +10,6 @@ function Add-RocksaltUser {
     return "Yes"
   }
   //endif
-
   return "No"
 }
 

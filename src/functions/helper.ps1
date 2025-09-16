@@ -3,11 +3,9 @@ function Write-Out {
     [string]$Message,
     [ConsoleColor]$Color = "White"
   )
-  //ifdef NO_INPUT
-  return
-  //endif
-
+  //ifdef INPUT
   Write-Host $Message -ForegroundColor $Color
+  //endif
 }
 
 function Write-Error {
@@ -91,25 +89,25 @@ Function Convert-RamMemoryType([Parameter(Mandatory = $true)]$MemoryTypeDecimal)
 }
 
 function Read-Y($prompt) {
-  //ifdef NO_INPUT
-  return $true
-  //endif
-
+  //ifdef INPUT
   do {
     $response = Read-Host "$prompt (Y/n)"
   } while ($response -notmatch '^(y|n|)$')
   return $response -ne 'n'
+  //else
+  return $true
+  //endif
 }
 
 function Read-N($prompt) {
-  //ifdef NO_INPUT
-  return $false
-  //endif
-
+  //ifdef INPUT
   do {
     $response = Read-Host "$prompt (y/N)"
   } while ($response -notmatch '^(y|n|)$')
   return $response -eq 'y'
+  //else
+  return $false
+  //endif
 }
 
 function Read-No($prompt) {
