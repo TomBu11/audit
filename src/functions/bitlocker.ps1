@@ -12,7 +12,8 @@ if ($bitlocker.ProtectionStatus -eq 1) {
   $bitlockerFilename += "$env:COMPUTERNAME Bitlocker $($protector.KeyProtectorId).txt"
   //endif
 
-  $bitlockerInfo = "$($protector.KeyProtectorId)`n$($protector.RecoveryPassword)"
+  $bitlockerID = "$($protector.KeyProtectorId)".Trim('{}')
+  $bitlockerKey = "$($protector.RecoveryPassword)"
 }
 else {
   Write-Error "Bitlocker is not enabled"

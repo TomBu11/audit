@@ -89,11 +89,9 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
 //ifdef OUTPUT
 //include "functions/output.ps1"
 //endif
-
 //ifdef DATA_SOURCE
 //include "functions/data_source.ps1"
 //endif
-
 //ifdef CUSTOM_ATTRIBUTES
 //include "functions/custom_attributes.ps1"
 //endif
