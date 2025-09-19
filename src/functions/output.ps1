@@ -8,7 +8,7 @@ $outPaths = @(
 ) | Select-Object -Unique
 
 $bitlockerFile = (
-  $(if ($gi ) { "$gi " } else { "" }) +
+  $(if ($gi ) { "GI$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$env:COMPUTERNAME Bitlocker " +
   "$bitlockerID.txt"

@@ -2,9 +2,9 @@ Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
 
 $auditer = Read-Host "RS (initials)"
 $name = Read-Host "Name"
-$gi = "GI$((Read-Host "GI") -replace '\D', '')"
-if ($gi.Length -ge 5 -and (Read-Y "Rename computer from $env:COMPUTERNAME to ${gi}?")) {
-  Rename-Computer -NewName "$gi"
+$gi = "$((Read-Host "GI") -replace '\D', '')"
+if ($gi -and (Read-Y "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
+  Rename-Computer -NewName "GI$gi"
 }
 Write-Out "`nLast update:`n$lastUpdate"
 $updates = Read-No "Updates"
