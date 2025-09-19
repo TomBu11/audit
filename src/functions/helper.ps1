@@ -20,7 +20,7 @@ function Write-Warning {
     [string]$Message
   )
   Write-Out "Warning: $Message" -ForegroundColor Yellow
-  $warnings += $Message
+  $global:warnings += $Message
 }
 
 function Get-CommandStatus {
