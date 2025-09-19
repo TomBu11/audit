@@ -118,17 +118,3 @@ function Read-No($prompt) {
     return "No"
   }
 }
-function Get-TeamViewerInfo {
-  $possiblePaths = @(
-    "HKLM:\SOFTWARE\TeamViewer",
-    "HKLM:\SOFTWARE\Wow6432Node\TeamViewer"
-  )
-
-  $TeamViewerInfo = $null
-  foreach ($path in $possiblePaths) {
-    if (Test-Path $path) {
-      $TeamViewerInfo = Get-CommandStatus -Command { Get-ItemProperty -Path $path } -Message "TeamViewer info from: $path"
-    }
-  }
-  return $TeamViewerInfo
-}

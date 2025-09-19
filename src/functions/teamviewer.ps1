@@ -1,5 +1,20 @@
 Write-Out "`n=== Checking Teamviewer ===`n" -ForegroundColor DarkYellow
 
+function Get-TeamViewerInfo {
+  $possiblePaths = @(
+    "HKLM:\SOFTWARE\TeamViewer",
+    "HKLM:\SOFTWARE\Wow6432Node\TeamViewer"
+  )
+
+  $TeamViewerInfo = $null
+  foreach ($path in $possiblePaths) {
+    if (Test-Path $path) {
+      $TeamViewerInfo = Get-CommandStatus -Command { Get-ItemProperty -Path $path } -Message "TeamViewer info from: $path"
+    }
+  }
+  return $TeamViewerInfo
+}
+
 function Install-TeamViewer {
   Write-Out "Installing TeamViewer..."
   $teamviewerInstaller = Join-Path -Path $rocksaltPath -ChildPath "TeamViewer_Host_Setup.exe"
@@ -29,6 +44,8 @@ function Install-TeamViewer {
   Write-Out "TeamViewer installed successfully"
   return Get-TeamViewerInfo
 }
+
+$TeamViewerInfo = Get-TeamViewerInfo
 
 if (-not $TeamViewerInfo) {
   Write-Error "TeamViewer not installed"

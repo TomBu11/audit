@@ -32,9 +32,7 @@ else {
 <# BRUTE FORCE PROTECTION #>
 
 Write-Out "`n=== Running brute force commands ===`n" -ForegroundColor DarkYellow
-net accounts /lockoutthreshold:10 | Out-Null
-net accounts /lockoutwindow:5 | Out-Null
-net accounts /lockoutduration:30 | Out-Null
+net accounts /lockoutthreshold:10 /lockoutwindow:5 /lockoutduration:30 | Out-Null
 
 
 <# TEAMVIEWER #>

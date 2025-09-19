@@ -8,23 +8,26 @@ $outPaths = @(
 ) | Select-Object -Unique
 
 $bitlockerFile = (
-  $(if ($gi) { "$gi " } else { "" }) +
+  $(if ($gi ) { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$env:COMPUTERNAME Bitlocker " +
   "$bitlockerID.txt"
 )
 
 foreach ($path in $outPaths) {
-  $auditFile = Join-Path $path "Audit.txt"
-  $line | Out-File -Append -FilePath $auditFile
-  Write-Out "Audit information has been appended to $auditFile"
+  $auditPath = Join-Path $path "Audit.txt"
+  $line | Out-File -Append -FilePath $auditPath
+  Write-Out "Audit information has been appended to $auditPath"
 
-  "$bitlockerID`n$bitlockerKey" | Out-File -FilePath $bitlockerFile
-  if (Test-Path $bitlockerFile) {
-    Write-Out "Bitlocker saved to $bitlockerFile`n"
-  }
-  else {
-    Write-Error "Failed to save Bitlocker info to $bitlockerFile`n"
+  if ($bitlocker) {
+    $bitlockerPath = Join-Path $path $bitlockerFile
+    "$bitlockerID`n$bitlockerKey" | Out-File -FilePath $bitlockerPath
+    if (Test-Path $bitlockerPath) {
+      Write-Out "Bitlocker saved to $bitlockerPath`n"
+    }
+    else {
+      Write-Error "Failed to save Bitlocker info to $bitlockerPath`n"
+    }
   }
 }
 
