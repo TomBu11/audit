@@ -8,7 +8,7 @@ $Users = @( Get-CommandStatus -Command { Get-LocalGroupMember -Group "Users" | W
       $_.Name -notmatch "^NT AUTHORITY" -and
       $_.Name -notmatch "^BUILTIN"
     } | Select-Object -ExpandProperty Name } -Message 'users' )
-$PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk } -Message 'disks'
+$PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk | Where-Object { $_.BusType -ne 'USB' } } -Message 'disks'
 $InstalledSoftware = Get-CommandStatus -Command { Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* } -Message 'software'
 $HardwareReadiness = Get-CommandStatus -Command { Invoke-Expression $hardwareReadinessScript 2>&1 | Out-String | ConvertFrom-Json } -Message 'hardware readiness'
 
