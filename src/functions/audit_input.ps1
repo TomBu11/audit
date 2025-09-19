@@ -1,6 +1,6 @@
 Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
 
-$auditer = Read-Host "RS (initials)"
+$auditer = Read-Host "RS (initials)".ToUpper()
 $name = Read-Host "Name"
 $gi = "$((Read-Host "GI") -replace '\D', '')"
 if ($gi -and (Read-Y "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
@@ -33,4 +33,4 @@ Write-Out "`nChrome version: $chromeVersion`nFirefox version: $firefoxVersion`nE
 
 $otherBrowsers = Read-Host "Other browsers"
 $softwareValid = Read-No "Software valid?"
-$notes = Read-Host "Notes"
+$notes = Read-Host "`nNotes"
