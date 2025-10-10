@@ -95,9 +95,11 @@ $outTable | Format-List
 //ifdef NORMAL
 //include "functions/output.ps1"
 //endif
-//ifdef DATA_SOURCE
-//include "functions/data_source.ps1"
-//endif
 //ifdef CUSTOM_ATTRIBUTES
-//include "functions/custom_attributes.ps1"
+foreach ($property in $outTable.PSObject.Properties) {
+  Action1-Set-CustomAttribute "$($property.Name)" "$($property.Value)"
+}
+//endif
+//ifdef DATA_SOURCE
+$outTable
 //endif
