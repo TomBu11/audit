@@ -883,7 +883,6 @@ $outTable = [PSCustomObject]@{
   BitlockerID      = "$bitlockerID"
   BitlockerKey     = "$bitlockerKey"
   TeamViewer       = "$teamviewer"
-  BruteForce       = "Yes"
   ChromeVersion    = "$chromeVersion"
   FirefoxVersion   = "$firefoxVersion"
   EdgeVersion      = "$edgeVersion"
