@@ -1,4 +1,5 @@
 $outTable = [PSCustomObject]@{
+  DateUpdated      = "$date"
   PCName           = "$env:COMPUTERNAME"
   Manufacturer     = "$manufacturer"
   Model            = "$model"

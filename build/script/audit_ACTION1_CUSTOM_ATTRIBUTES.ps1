@@ -635,7 +635,7 @@ $PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk | Where-Object { 
 $InstalledSoftware = Get-CommandStatus -Command { Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* } -Message 'software'
 $HardwareReadiness = Get-CommandStatus -Command { Invoke-Expression $hardwareReadinessScript 2>&1 | Out-String | ConvertFrom-Json } -Message 'hardware readiness'
 
-$date = Get-Date -Format "yyyy-MM-dd"
+$date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
@@ -862,6 +862,7 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
 }
 
 $outTable = [PSCustomObject]@{
+  DateUpdated      = "$date"
   PCName           = "$env:COMPUTERNAME"
   Manufacturer     = "$manufacturer"
   Model            = "$model"
