@@ -49,7 +49,7 @@ $TeamViewerInfo = Get-TeamViewerInfo
 
 if (-not $TeamViewerInfo) {
   Write-Error "TeamViewer not installed"
-  if (Read-Y "Install TeamViewer?") {
+  if (Read-N "Install TeamViewer?") {
     $TeamViewerInfo = Install-TeamViewer
   }
 }

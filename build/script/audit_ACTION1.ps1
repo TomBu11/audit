@@ -604,7 +604,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version 1.1.0`n" -ForegroundColor Green
+Write-Out "Audit script version 1.1.1`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -641,8 +641,7 @@ $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
 $serialNumber = $ComputerInfo.BiosSeralNumber
-$os = $ComputerInfo.OSName
-$lastUpdate = Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1 InstalledOn, HotFixID, Description | Out-String
+$os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
 $domainName = $ComputerInfo.CsDomain
 $processor = $ComputerInfo.CsProcessors.Name -join ', '
 $ram = "$([math]::Round($ComputerInfo.CsTotalPhysicalMemory / 1GB))GB"
@@ -665,6 +664,19 @@ else {
 $chromeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Google Chrome" }).DisplayVersion
 $firefoxVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Mozilla Firefox" }).DisplayVersion
 $edgeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Microsoft Edge" }).DisplayVersion
+
+$officeProducts = $InstalledSoftware | Where-Object {
+  $_.DisplayName -match "Office 365|Microsoft 365"
+} | Select-Object DisplayName, DisplayVersion
+
+if ($officeProducts) {
+  $office365Version = ($officeProducts | ForEach-Object {
+      "$($_.DisplayName): $($_.DisplayVersion)"
+    }) -join "; "
+}
+else {
+  $office365Version = "Not installed"
+}
 
 if ($physicalDisks.Count -gt 2) {
   Write-Warning "More than 2 disks detected"
@@ -730,7 +742,7 @@ $TeamViewerInfo = Get-TeamViewerInfo
 
 if (-not $TeamViewerInfo) {
   Write-Error "TeamViewer not installed"
-  if (Read-Y "Install TeamViewer?") {
+  if (Read-N "Install TeamViewer?") {
     $TeamViewerInfo = Install-TeamViewer
   }
 }
@@ -758,7 +770,7 @@ elseif ($Admins -match '\\Rocksalt$') {
 elseif (Get-LocalUser -Name "Rocksalt" -ErrorAction SilentlyContinue) {
   Write-Error "Local Rocksalt user is not administrator"
 
-  if (Read-Y "Make Rocksalt admin?") {
+  if (Read-N "Make Rocksalt admin?") {
     Add-LocalGroupMember -Group "Administrators" -Member "Rocksalt"
     Write "Local Rocksalt user added to Administrators group"
     $rocksaltExists = "Yes"
@@ -819,10 +831,10 @@ function Get-Bitlocker {
 
   # Report encryption progress
   if ($bitlockerVolume.EncryptionPercentage -lt 100) {
-    Write-Host "BitLocker still encrypting ($($bitlockerVolume.EncryptionPercentage)%)" -ForegroundColor Yellow
+    Write-Out "BitLocker still encrypting ($($bitlockerVolume.EncryptionPercentage)%)" -ForegroundColor Yellow
   }
   else {
-    Write-Host "BitLocker is fully enabled and protected" -ForegroundColor Green
+    Write-Out "BitLocker is fully enabled and protected" -ForegroundColor Green
   }
 
   return $bitlockerVolume.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' }
@@ -851,35 +863,35 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
 }
 
 $outTable = [PSCustomObject]@{
-  Date            = $date
-  PCName          = $env:COMPUTERNAME
-  Manufacturer    = $manufacturer
-  Model           = $model
-  Type            = $type
-  SerialNumber    = $serialNumber
-  OS              = $os
-  Win11Compatible = $win11Comp
-  Updates         = $lastUpdate
-  RocksaltExists  = $rocksaltExists
-  ClientAdmin     = "$Admins"
-  UserName        = "$Users"
-  DomainName      = $domainName
-  Processor       = $processor
-  RAM             = $ram
-  RAMType         = $ramType
-  DiskSize        = $disk1Size
-  DiskType        = $disk1Type
-  Disk2Size       = $disk2Size
-  Disk2Type       = $disk2Type
-  Bitlocker       = $bitlockerOn
-  BitlockerID     = $bitlockerID
-  BitlockerKey    = $bitlockerKey
-  TeamViewer      = $teamviewer
-  BruteForce      = "Yes"
-  ChromeVersion   = $chromeVersion
-  FirefoxVersion  = $firefoxVersion
-  EdgeVersion     = $edgeVersion
-  Notes           = $notes
+  Date             = "$date"
+  PCName           = "$env:COMPUTERNAME"
+  Manufacturer     = "$manufacturer"
+  Model            = "$model"
+  Type             = "$type"
+  SerialNumber     = "$serialNumber"
+  OS               = "$os"
+  Win11Compatible  = "$win11Comp"
+  RocksaltExists   = "$rocksaltExists"
+  ClientAdmin      = "$Admins"
+  UserName         = "$Users"
+  DomainName       = "$domainName"
+  Processor        = "$processor"
+  RAM              = "$ram"
+  RAMType          = "$ramType"
+  DiskSize         = "$disk1Size"
+  DiskType         = "$disk1Type"
+  Disk2Size        = "$disk2Size"
+  Disk2Type        = "$disk2Type"
+  Bitlocker        = "$bitlockerOn"
+  BitlockerID      = "$bitlockerID"
+  BitlockerKey     = "$bitlockerKey"
+  TeamViewer       = "$teamviewer"
+  BruteForce       = "Yes"
+  ChromeVersion    = "$chromeVersion"
+  FirefoxVersion   = "$firefoxVersion"
+  EdgeVersion      = "$edgeVersion"
+  Office365Version = "$office365Version"
+  Notes            = "$notes"
 }
 
 $line = ($outTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"

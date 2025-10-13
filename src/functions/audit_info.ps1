@@ -17,8 +17,7 @@ $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
 $serialNumber = $ComputerInfo.BiosSeralNumber
-$os = $ComputerInfo.OSName
-$lastUpdate = Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1 InstalledOn, HotFixID, Description | Out-String
+$os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
 $domainName = $ComputerInfo.CsDomain
 $processor = $ComputerInfo.CsProcessors.Name -join ', '
 $ram = "$([math]::Round($ComputerInfo.CsTotalPhysicalMemory / 1GB))GB"
@@ -41,6 +40,19 @@ else {
 $chromeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Google Chrome" }).DisplayVersion
 $firefoxVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Mozilla Firefox" }).DisplayVersion
 $edgeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Microsoft Edge" }).DisplayVersion
+
+$officeProducts = $InstalledSoftware | Where-Object {
+  $_.DisplayName -match "Office 365|Microsoft 365"
+} | Select-Object DisplayName, DisplayVersion
+
+if ($officeProducts) {
+  $office365Version = ($officeProducts | ForEach-Object {
+      "$($_.DisplayName): $($_.DisplayVersion)"
+    }) -join "; "
+}
+else {
+  $office365Version = "Not installed"
+}
 
 if ($physicalDisks.Count -gt 2) {
   Write-Warning "More than 2 disks detected"

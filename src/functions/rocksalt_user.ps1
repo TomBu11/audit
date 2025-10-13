@@ -25,7 +25,7 @@ elseif ($Admins -match '\\Rocksalt$') {
 elseif (Get-LocalUser -Name "Rocksalt" -ErrorAction SilentlyContinue) {
   Write-Error "Local Rocksalt user is not administrator"
 
-  if (Read-Y "Make Rocksalt admin?") {
+  if (Read-N "Make Rocksalt admin?") {
     Add-LocalGroupMember -Group "Administrators" -Member "Rocksalt"
     Write "Local Rocksalt user added to Administrators group"
     $rocksaltExists = "Yes"

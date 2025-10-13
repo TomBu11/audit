@@ -13,10 +13,10 @@ function Get-Bitlocker {
 
   # Report encryption progress
   if ($bitlockerVolume.EncryptionPercentage -lt 100) {
-    Write-Host "BitLocker still encrypting ($($bitlockerVolume.EncryptionPercentage)%)" -ForegroundColor Yellow
+    Write-Out "BitLocker still encrypting ($($bitlockerVolume.EncryptionPercentage)%)" -ForegroundColor Yellow
   }
   else {
-    Write-Host "BitLocker is fully enabled and protected" -ForegroundColor Green
+    Write-Out "BitLocker is fully enabled and protected" -ForegroundColor Green
   }
 
   return $bitlockerVolume.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' }

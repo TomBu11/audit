@@ -6,7 +6,6 @@ $gi = "$((Read-Host "GI") -replace '\D', '')"
 if ($gi -and (Read-Y "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
   Rename-Computer -NewName "GI$gi"
 }
-Write-Out "`nLast update:`n$lastUpdate"
 $updates = Read-No "Updates"
 $drivers = Read-No "Drivers"
 $antiVirus = Read-No "Antivirus"
