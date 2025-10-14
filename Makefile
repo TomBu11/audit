@@ -8,29 +8,29 @@ FLAGS_ACTION1_CUSTOM_ATTRIBUTES=-DCUSTOM_ATTRIBUTES
 RELEASE_VERSION_FILE := VERSION
 DEV_BUILD_FILE := DEV_BUILD
 
-VERSION := $(shell cat $(RELEASE_VERSION_FILE) 2>/dev/null || echo "0.0.0")
 DEV_BUILD := $(shell cat $(DEV_BUILD_FILE) 2>/dev/null || echo 0)
+RELEASE_VERSION := $(shell cat $(RELEASE_VERSION_FILE) 2>/dev/null || echo "0.0.0")
+VERSION ?= v$(RELEASE_VERSION)\#DEV$(DEV_BUILD)
 
 dev:
-	@echo $$(($(DEV_BUILD)+1)) > $(DEV_BUILD_FILE)
-	@echo "Dev build: v$(VERSION)#DEV$$(cat $(DEV_BUILD_FILE))"
-	$(MAKE) build VERSION="$(VERSION)#DEV$$(cat $(DEV_BUILD_FILE))"
+	@echo $$(($(DEV_BUILD)+1)) > $(DEV_BUILD_FILE); \
+	VERSION="v$(RELEASE_VERSION)#DEV$$(($(DEV_BUILD)+1))"; \
+	echo "Dev build: $$VERSION"; \
+	$(MAKE) build VERSION="$$VERSION"
 
 release:
-	@read -p "Enter new release version (current: $(VERSION)): " newver; \
-	echo $$newver > $(RELEASE_VERSION_FILE); \
+	@read -p "Enter new release version (current: v$(RELEASE_VERSION)): " VERSION; \
+	echo $$VERSION > $(RELEASE_VERSION_FILE); \
 	echo 0 > $(DEV_BUILD_FILE); \
-	git tag v$$newver; \
-	git push --tags; \
-	echo "Release build: v$$newver"
-	$(MAKE) build VERSION="$$newver"
+	echo "Release build: v$$VERSION"; \
+	$(MAKE) build VERSION="v$$VERSION"
 
 build: $(VERSIONS:%=build/script/audit_%.ps1)
-	@echo "Built as version: v$(VERSION)"
+	@echo "\nBuilt as version: $(VERSION)"
 
 version:
-	@echo "Dev build: v$(VERSION)#DEV$(DEV_BUILD)"
-	@echo "Release version: v$(VERSION)"
+	@echo "Dev build: $(VERSION)"
+	@echo "Release version: v$(RELEASE_VERSION)"
 
 clean:
 	rm -f build/script/audit_*.ps1
@@ -41,7 +41,7 @@ build/script/audit_%.ps1: src/audit.ps1.in
 		-U "//" "" "(" "," ")" "(" ")" "$$" "" \
 		-M "//" "\n" " " " " "\n" "(" ")" \
 		$(FLAGS_$*) \
-		-DVERSION="v$(VERSION)" \
+		-DVERSION="$(VERSION)" \
 		-DDATE="$(shell date +'%Y-%m-%d')" \
 		-DTIME="$(shell date +'%H:%M:%S')" \
 		src/audit.ps1.in > $@
