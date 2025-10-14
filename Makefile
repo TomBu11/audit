@@ -12,13 +12,13 @@ DEV_BUILD := $(shell cat $(DEV_BUILD_FILE) 2>/dev/null || echo 0)
 RELEASE_VERSION := $(shell cat $(RELEASE_VERSION_FILE) 2>/dev/null || echo "0.0.0")
 VERSION ?= v$(RELEASE_VERSION)\#DEV$(DEV_BUILD)
 
-dev:
+dev: clean
 	@echo $$(($(DEV_BUILD)+1)) > $(DEV_BUILD_FILE); \
 	VERSION="v$(RELEASE_VERSION)#DEV$$(($(DEV_BUILD)+1))"; \
 	echo "Dev build: $$VERSION"; \
 	$(MAKE) build VERSION="$$VERSION"
 
-release:
+release: clean
 	@read -p "Enter new release version (current: v$(RELEASE_VERSION)): " VERSION; \
 	echo $$VERSION > $(RELEASE_VERSION_FILE); \
 	echo 0 > $(DEV_BUILD_FILE); \
