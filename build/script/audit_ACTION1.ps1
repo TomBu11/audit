@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.1
-# DateTime: 2025-10-14 13:10:16
+# Version: v1.1.2
+# DateTime: 2025-10-14 13:56:08
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -607,7 +607,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.1`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.2`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -897,14 +897,5 @@ $outTable = [PSCustomObject]@{
   Notes            = "$notes"
 }
 
-$line = ($outTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"
-
-Write-Out "`nTab-separated Line:`n" -ForegroundColor DarkYellow
-Write-Out $line
-
 Write-Out "`n=== Vertical Table ===`n" -ForegroundColor DarkYellow
 $outTable | Format-List
-
-
-<# SAVE OUTPUT #>
-

@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.1
-# DateTime: 2025-10-14 13:10:16
+# Version: v1.1.2
+# DateTime: 2025-10-14 13:56:08
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.1`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.2`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -892,10 +892,6 @@ $outTable = [PSCustomObject]@{
   Office365Version = "$office365Version"
   Notes            = "$notes"
 }
-
-
-
-<# SAVE OUTPUT #>
 
 foreach ($property in $outTable.PSObject.Properties) {
   Action1-Set-CustomAttribute "$($property.Name)" "$($property.Value)"

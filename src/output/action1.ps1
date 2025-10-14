@@ -1,5 +1,5 @@
 $outTable = [PSCustomObject]@{
-  DateUpdated      = "$date"
+  Date             = "$date"
   PCName           = "$env:COMPUTERNAME"
   Manufacturer     = "$manufacturer"
   Model            = "$model"
@@ -8,6 +8,8 @@ $outTable = [PSCustomObject]@{
   OS               = "$os"
   Win11Compatible  = "$win11Comp"
   RocksaltExists   = "$rocksaltExists"
+  ClientAdmin      = "$Admins"
+  UserName         = "$Users"
   DomainName       = "$domainName"
   Processor        = "$processor"
   RAM              = "$ram"
@@ -20,9 +22,13 @@ $outTable = [PSCustomObject]@{
   BitlockerID      = "$bitlockerID"
   BitlockerKey     = "$bitlockerKey"
   TeamViewer       = "$teamviewer"
+  BruteForce       = "Yes"
   ChromeVersion    = "$chromeVersion"
   FirefoxVersion   = "$firefoxVersion"
   EdgeVersion      = "$edgeVersion"
   Office365Version = "$office365Version"
   Notes            = "$notes"
 }
+
+Write-Out "`n=== Vertical Table ===`n" -ForegroundColor DarkYellow
+$outTable | Format-List

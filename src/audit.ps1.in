@@ -77,39 +77,14 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
 }
 
 //ifdef NORMAL
-//include "output_table/normal.ps1"
+//include "output/normal.ps1"
 //endif
 //ifdef ACTION1
-//include "output_table/action1.ps1"
+//include "output/action1.ps1"
 //endif
 //ifdef DATA_SOURCE
-//include "output_table/data_source.ps1"
+//include "output/data_source.ps1"
 //endif
 //ifdef CUSTOM_ATTRIBUTES
-//include "output_table/custom_attributes.ps1"
-//endif
-
-//ifdef OUTPUT
-$line = ($outTable.PSObject.Properties | ForEach-Object { $_.Value }) -join "`t"
-
-Write-Out "`nTab-separated Line:`n" -ForegroundColor DarkYellow
-Write-Out $line
-
-Write-Out "`n=== Vertical Table ===`n" -ForegroundColor DarkYellow
-$outTable | Format-List
-//endif
-
-
-<# SAVE OUTPUT #>
-
-//ifdef NORMAL
-//include "functions/output.ps1"
-//endif
-//ifdef CUSTOM_ATTRIBUTES
-foreach ($property in $outTable.PSObject.Properties) {
-  Action1-Set-CustomAttribute "$($property.Name)" "$($property.Value)"
-}
-//endif
-//ifdef DATA_SOURCE
-$outTable
+//include "output/custom_attributes.ps1"
 //endif
