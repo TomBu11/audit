@@ -603,7 +603,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version 1.1.1`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.1`n" -ForegroundColor Green
 
 $global:warnings = @()
 
