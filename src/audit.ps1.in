@@ -1,5 +1,8 @@
 #Requires -RunAsAdministrator
 
+# Version: //VERSION
+# DateTime: //DATE //TIME
+
 //include "functions/hardware_readiness.ps1"
 
 
