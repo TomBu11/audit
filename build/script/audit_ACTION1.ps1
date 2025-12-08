@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.2
-# DateTime: 2025-10-14 13:56:08
+# Version: v1.1.3
+# DateTime: 2025-12-08 15:06:23
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -607,7 +607,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.2`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.3`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -813,10 +813,6 @@ else {
   }
 }
 
-<# AUDITER INPUT #>
-
-
-
 <# BITLOCKER #>
 
 Write-Out "`n=== Checking Bitlocker ===`n" -ForegroundColor DarkYellow
@@ -854,6 +850,10 @@ if ($bitlocker) {
 else {
   $bitlockerOn = "No"
 }
+
+
+<# AUDITER INPUT #>
+
 
 
 <# OUTPUT #>

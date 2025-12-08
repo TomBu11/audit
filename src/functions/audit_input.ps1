@@ -3,7 +3,7 @@ Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
 $auditer = $(Read-Host "RS (initials)").ToUpper()
 $name = Read-Host "Name"
 $gi = "$((Read-Host "GI") -replace '\D', '')"
-if ($gi -and (Read-Y "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
+if ($gi -and (Read-N "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
   Rename-Computer -NewName "GI$gi"
 }
 $updates = Read-No "Updates"

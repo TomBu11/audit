@@ -55,16 +55,16 @@ net accounts /lockoutthreshold:10 /lockoutwindow:5 /lockoutduration:30 | Out-Nul
 //include "functions/windows11_compatible.ps1"
 
 
+<# BITLOCKER #>
+
+//include "functions/bitlocker.ps1"
+
+
 <# AUDITER INPUT #>
 
 //ifdef INPUT
 //include "functions/audit_input.ps1"
 //endif
-
-
-<# BITLOCKER #>
-
-//include "functions/bitlocker.ps1"
 
 
 <# OUTPUT #>

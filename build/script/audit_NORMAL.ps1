@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.2
-# DateTime: 2025-10-14 13:56:08
+# Version: v1.1.3
+# DateTime: 2025-12-08 15:06:23
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -613,7 +613,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.2`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.3`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -826,45 +826,6 @@ else {
   }
 }
 
-<# AUDITER INPUT #>
-
-Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
-
-$auditer = $(Read-Host "RS (initials)").ToUpper()
-$name = Read-Host "Name"
-$gi = "$((Read-Host "GI") -replace '\D', '')"
-if ($gi -and (Read-Y "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
-  Rename-Computer -NewName "GI$gi"
-}
-$updates = Read-No "Updates"
-$drivers = Read-No "Drivers"
-$antiVirus = Read-No "Antivirus"
-
-Write-Out "`nClient Admin:"
-for ($i = 0; $i -lt $Admins.Count; $i++) {
-  Write-Out " [$($i + 1)] $($Admins[$i])"
-}
-$clientAdmin = Read-Host "Enter number or custom"
-if ($clientAdmin -as [int] -and $clientAdmin -gt 0 -and $clientAdmin -le $Admins.Count) {
-  $clientAdmin = $Admins[$clientAdmin - 1]
-}
-
-Write-Out "`nUsername (Account they use):"
-for ($i = 0; $i -lt $Users.Count; $i++) {
-  Write-Out " [$($i + 1)] $($Users[$i])"
-}
-$userName = Read-Host "Enter number or custom"
-if ($userName -as [int] -and $userName -gt 0 -and $userName -le $Users.Count) {
-  $userName = $Users[$userName - 1]
-}
-
-Write-Out "`nChrome version: $chromeVersion`nFirefox version: $firefoxVersion`nEdge version: $edgeVersion"
-
-$otherBrowsers = Read-Host "Other browsers"
-$softwareValid = Read-No "Software valid?"
-$notes = Read-Host "`nNotes"
-
-
 <# BITLOCKER #>
 
 Write-Out "`n=== Checking Bitlocker ===`n" -ForegroundColor DarkYellow
@@ -902,6 +863,45 @@ if ($bitlocker) {
 else {
   $bitlockerOn = "No"
 }
+
+
+<# AUDITER INPUT #>
+
+Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
+
+$auditer = $(Read-Host "RS (initials)").ToUpper()
+$name = Read-Host "Name"
+$gi = "$((Read-Host "GI") -replace '\D', '')"
+if ($gi -and (Read-N "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
+  Rename-Computer -NewName "GI$gi"
+}
+$updates = Read-No "Updates"
+$drivers = Read-No "Drivers"
+$antiVirus = Read-No "Antivirus"
+
+Write-Out "`nClient Admin:"
+for ($i = 0; $i -lt $Admins.Count; $i++) {
+  Write-Out " [$($i + 1)] $($Admins[$i])"
+}
+$clientAdmin = Read-Host "Enter number or custom"
+if ($clientAdmin -as [int] -and $clientAdmin -gt 0 -and $clientAdmin -le $Admins.Count) {
+  $clientAdmin = $Admins[$clientAdmin - 1]
+}
+
+Write-Out "`nUsername (Account they use):"
+for ($i = 0; $i -lt $Users.Count; $i++) {
+  Write-Out " [$($i + 1)] $($Users[$i])"
+}
+$userName = Read-Host "Enter number or custom"
+if ($userName -as [int] -and $userName -gt 0 -and $userName -le $Users.Count) {
+  $userName = $Users[$userName - 1]
+}
+
+Write-Out "`nChrome version: $chromeVersion`nFirefox version: $firefoxVersion`nEdge version: $edgeVersion"
+
+$otherBrowsers = Read-Host "Other browsers"
+$softwareValid = Read-No "Software valid?"
+$notes = Read-Host "`nNotes"
 
 
 <# OUTPUT #>
