@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.3
-# DateTime: 2025-12-08 15:06:23
+# Version: v1.1.4
+# DateTime: 2025-12-08 15:40:09
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.3`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.4`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -638,6 +638,7 @@ $PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk | Where-Object { 
 $InstalledSoftware = Get-CommandStatus -Command { Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* } -Message 'software'
 $HardwareReadiness = Get-CommandStatus -Command { Invoke-Expression $hardwareReadinessScript 2>&1 | Out-String | ConvertFrom-Json } -Message 'hardware readiness'
 
+$computerName = $env:COMPUTERNAME
 $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
@@ -866,7 +867,7 @@ if ($warnings.Count -gt 0 -and (Read-Y "Would you like to add warnings to notes?
 
 $outTable = [PSCustomObject]@{
   Date             = "$date"
-  PCName           = "$env:COMPUTERNAME"
+  PCName           = "$computerName"
   Manufacturer     = "$manufacturer"
   Model            = "$model"
   Type             = "$type"
@@ -894,7 +895,7 @@ $outTable = [PSCustomObject]@{
   EdgeVersion      = "$edgeVersion"
   Office365Version = "$office365Version"
   Notes            = "$notes"
-  A1_Key           = "$env:COMPUTERNAME"
+  A1_Key           = "$computerName"
 }
 
 $outTable

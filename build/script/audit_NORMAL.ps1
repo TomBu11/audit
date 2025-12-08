@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.3
-# DateTime: 2025-12-08 15:06:23
+# Version: v1.1.4
+# DateTime: 2025-12-08 15:40:09
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -613,7 +613,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.3`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.4`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -645,6 +645,7 @@ $PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk | Where-Object { 
 $InstalledSoftware = Get-CommandStatus -Command { Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* } -Message 'software'
 $HardwareReadiness = Get-CommandStatus -Command { Invoke-Expression $hardwareReadinessScript 2>&1 | Out-String | ConvertFrom-Json } -Message 'hardware readiness'
 
+$computerName = $env:COMPUTERNAME
 $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
@@ -871,9 +872,10 @@ Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
 
 $auditer = $(Read-Host "RS (initials)").ToUpper()
 $name = Read-Host "Name"
-$gi = "$((Read-Host "GI") -replace '\D', '')"
-if ($gi -and (Read-N "Rename computer from $env:COMPUTERNAME to GI${gi}?")) {
-  Rename-Computer -NewName "GI$gi"
+$gi = "GI$((Read-Host "GI") -replace '\D', '')"
+if ($gi -and ($gi -ne $computerName) -and (Read-N "Rename computer from $computerName to ${gi}?")) {
+  Rename-Computer -NewName "$gi"
+  $computerName = "$gi"
 }
 $updates = Read-No "Updates"
 $drivers = Read-No "Drivers"
@@ -918,8 +920,8 @@ $outTable = [PSCustomObject]@{
   Date             = "$date"
   Done             = "Part"
   Users            = "$name"
-  GI               = "GI$gi"
-  PCName           = "$env:COMPUTERNAME"
+  GI               = "$gi"
+  PCName           = "$computerName"
   Manufacturer     = "$manufacturer"
   Model            = "$model"
   Type             = "$type"

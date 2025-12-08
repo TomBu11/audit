@@ -1,6 +1,6 @@
 $outTable = [PSCustomObject]@{
   Date             = "$date"
-  PCName           = "$env:COMPUTERNAME"
+  PCName           = "$computerName"
   Manufacturer     = "$manufacturer"
   Model            = "$model"
   Type             = "$type"
@@ -28,7 +28,7 @@ $outTable = [PSCustomObject]@{
   EdgeVersion      = "$edgeVersion"
   Office365Version = "$office365Version"
   Notes            = "$notes"
-  A1_Key           = "$env:COMPUTERNAME"
+  A1_Key           = "$computerName"
 }
 
 $outTable
