@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.4
-# DateTime: 2025-12-08 15:40:09
+# Version: v1.1.5
+# DateTime: 2026-02-16 16:58:08
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -613,7 +613,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.4`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.5`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -873,7 +873,7 @@ Write-Out "`n=== Audit information ===`n" -ForegroundColor DarkYellow
 $auditer = $(Read-Host "RS (initials)").ToUpper()
 $name = Read-Host "Name"
 $gi = "GI$((Read-Host "GI") -replace '\D', '')"
-if ($gi -and ($gi -ne $computerName) -and (Read-N "Rename computer from $computerName to ${gi}?")) {
+if ($gi -and $gi -ne "GI" -and $gi -ne $computerName -and (Read-N "Rename computer from $computerName to ${gi}?")) {
   Rename-Computer -NewName "$gi"
   $computerName = "$gi"
 }
@@ -975,7 +975,7 @@ $outPaths = @(
 ) | Select-Object -Unique
 
 $bitlockerFile = (
-  $(if ($gi ) { "GI$gi " } else { "" }) +
+  $(if ($gi ) { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$env:COMPUTERNAME Bitlocker " +
   "$bitlockerID.txt"
