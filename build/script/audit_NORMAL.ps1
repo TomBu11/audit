@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.6
-# DateTime: 2026-03-05 10:26:09
+# Version: v1.1.6.1
+# DateTime: 2026-03-05 10:36:40
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -613,7 +613,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.6`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.6.1`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -977,8 +977,14 @@ $outPaths = @(
 $bitlockerFile = (
   $(if ($gi ) { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
-  "$env:COMPUTERNAME Bitlocker " +
+  "$computerName Bitlocker " +
   "$bitlockerID.txt"
+)
+
+$softwareFile = (
+  $(if ($gi ) { "$gi " } else { "" }) +
+  $(if ($name) { "$name " } else { "" }) +
+  "$computerName Software.txt"
 )
 
 foreach ($path in $outPaths) {
@@ -986,7 +992,7 @@ foreach ($path in $outPaths) {
   $line | Out-File -Append -FilePath $auditPath
   Write-Out "Audit information has been appended to $auditPath"
 
-  $softwarePath = Join-Path $path "Software.txt"
+  $softwarePath = Join-Path $path $softwareFile
   $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $softwarePath
   Write-Out "Software list saved to $softwarePath`n"
 

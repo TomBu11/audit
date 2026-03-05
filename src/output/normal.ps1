@@ -60,8 +60,14 @@ $outPaths = @(
 $bitlockerFile = (
   $(if ($gi ) { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
-  "$env:COMPUTERNAME Bitlocker " +
+  "$computerName Bitlocker " +
   "$bitlockerID.txt"
+)
+
+$softwareFile = (
+  $(if ($gi ) { "$gi " } else { "" }) +
+  $(if ($name) { "$name " } else { "" }) +
+  "$computerName Software.txt"
 )
 
 foreach ($path in $outPaths) {
@@ -69,7 +75,7 @@ foreach ($path in $outPaths) {
   $line | Out-File -Append -FilePath $auditPath
   Write-Out "Audit information has been appended to $auditPath"
 
-  $softwarePath = Join-Path $path "Software.txt"
+  $softwarePath = Join-Path $path $softwareFile
   $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $softwarePath
   Write-Out "Software list saved to $softwarePath`n"
 
