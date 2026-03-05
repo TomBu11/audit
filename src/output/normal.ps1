@@ -58,14 +58,14 @@ $outPaths = @(
 ) | Select-Object -Unique
 
 $bitlockerFile = (
-  $(if ($gi ) { "$gi " } else { "" }) +
+  $(if ($gi -and $gi -ne "GI") { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$computerName Bitlocker " +
   "$bitlockerID.txt"
 )
 
 $softwareFile = (
-  $(if ($gi ) { "$gi " } else { "" }) +
+  $(if ($gi -and $gi -ne "GI") { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$computerName Software.txt"
 )

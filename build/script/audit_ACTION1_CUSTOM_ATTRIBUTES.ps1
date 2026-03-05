@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.6.1
-# DateTime: 2026-03-05 10:36:40
+# Version: v1.1.6.2
+# DateTime: 2026-03-05 10:39:14
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.6.1`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.6.2`n" -ForegroundColor Green
 
 $global:warnings = @()
 
