@@ -69,6 +69,10 @@ foreach ($path in $outPaths) {
   $line | Out-File -Append -FilePath $auditPath
   Write-Out "Audit information has been appended to $auditPath"
 
+  $softwarePath = Join-Path $path "Software.txt"
+  $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $softwarePath
+  Write-Out "Software list saved to $softwarePath`n"
+
   if ($bitlocker) {
     $bitlockerPath = Join-Path $path $bitlockerFile
     "$bitlockerID`n$bitlockerKey" | Out-File -FilePath $bitlockerPath
