@@ -19,6 +19,20 @@ $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
 $serialNumber = $ComputerInfo.BiosSeralNumber
 $os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
+
+$antiVirusProducts = $InstalledSoftware | Where-Object {
+  $_.DisplayName -match "sophos endpoint agent"
+} | Select-Object DisplayName, DisplayVersion
+
+if ($antiVirusProducts) {
+  $antiVirus = ($antiVirusProducts | ForEach-Object {
+      "$($_.DisplayName): $($_.DisplayVersion)"
+    }) -join "; "
+}
+else {
+  $antiVirus = "No"
+}
+
 $domainName = $ComputerInfo.CsDomain
 $processor = $ComputerInfo.CsProcessors.Name -join ', '
 $ram = "$([math]::Round($ComputerInfo.CsTotalPhysicalMemory / 1GB))GB"

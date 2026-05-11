@@ -9,7 +9,10 @@ if ($gi -and $gi -ne "GI" -and $gi -ne $computerName -and (Read-N "Rename comput
 }
 $updates = Read-No "Updates"
 $drivers = Read-No "Drivers"
-$antiVirus = Read-No "Antivirus"
+
+if ($antiVirus -eq "No") {
+  $antiVirus = Read-No "Antivirus"
+}
 
 Write-Out "`nClient Admin:"
 for ($i = 0; $i -lt $Admins.Count; $i++) {

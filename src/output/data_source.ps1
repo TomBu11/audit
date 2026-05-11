@@ -7,6 +7,7 @@ $outTable = [PSCustomObject]@{
   SerialNumber     = "$serialNumber"
   OS               = "$os"
   Win11Compatible  = "$win11Comp"
+  AntiVirus        = "$antiVirus"
   RocksaltExists   = "$rocksaltExists"
   ClientAdmin      = "$Admins"
   UserName         = "$Users"

@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.6.2
-# DateTime: 2026-03-05 10:39:14
+# Version: v1.1.7
+# DateTime: 2026-05-11 15:43:54
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.6.2`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.7`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -645,6 +645,20 @@ $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
 $serialNumber = $ComputerInfo.BiosSeralNumber
 $os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
+
+$antiVirusProducts = $InstalledSoftware | Where-Object {
+  $_.DisplayName -match "sophos endpoint agent"
+} | Select-Object DisplayName, DisplayVersion
+
+if ($antiVirusProducts) {
+  $antiVirus = ($antiVirusProducts | ForEach-Object {
+      "$($_.DisplayName): $($_.DisplayVersion)"
+    }) -join "; "
+}
+else {
+  $antiVirus = "No"
+}
+
 $domainName = $ComputerInfo.CsDomain
 $processor = $ComputerInfo.CsProcessors.Name -join ', '
 $ram = "$([math]::Round($ComputerInfo.CsTotalPhysicalMemory / 1GB))GB"
@@ -874,6 +888,7 @@ $outTable = [PSCustomObject]@{
   SerialNumber     = "$serialNumber"
   OS               = "$os"
   Win11Compatible  = "$win11Comp"
+  AntiVirus        = "$antiVirus"
   RocksaltExists   = "$rocksaltExists"
   DomainName       = "$domainName"
   Processor        = "$processor"
