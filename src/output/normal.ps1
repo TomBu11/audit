@@ -64,10 +64,10 @@ $bitlockerFile = (
   "$bitlockerID.txt"
 )
 
-$softwareFile = (
+$auditHRFile = (
   $(if ($gi -and $gi -ne "GI") { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
-  "$computerName Software.txt"
+  "$computerName AuditHR.txt"
 )
 
 foreach ($path in $outPaths) {
@@ -75,9 +75,11 @@ foreach ($path in $outPaths) {
   $line | Out-File -Append -FilePath $auditPath
   Write-Out "Audit information has been appended to $auditPath"
 
-  $softwarePath = Join-Path $path $softwareFile
-  $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $softwarePath
-  Write-Out "Software list saved to $softwarePath`n"
+  $auditHRPath = Join-Path $path $auditHRFile
+  $outTable | Format-List | Out-File -Append -FilePath $auditHRPath
+  Write-Out "Audit table saved to $auditHRPath`n"
+  $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $auditHRPath
+  Write-Out "Software list saved to $auditHRPath`n"
 
   if ($bitlocker) {
     $bitlockerPath = Join-Path $path $bitlockerFile
