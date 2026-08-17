@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.11
-# DateTime: 2026-08-17 14:21:00
+# Version: v1.1.12
+# DateTime: 2026-08-17 14:49:09
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.11`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.12`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -643,7 +643,15 @@ $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
-$macAddress = (Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.MacAddress -and $_.MacAddress -ne "00:00:00:00:00:00" } | Select-Object -ExpandProperty MacAddress) -join ', '
+$macAddress = (Get-NetAdapter |
+    Where-Object {
+        ($_.Status -eq 'Up' -or $_.HardwareInterface -eq $true) -and
+        $_.MacAddress -and
+        $_.MacAddress -ne "00:00:00:00:00:00"
+    } |
+    ForEach-Object {
+        "$($_.Name): $($_.MacAddress)"
+    }) -join ', '
 $serialNumber = ($ComputerInfo.PSObject.Properties | Where-Object { $_.Name -like 'BiosSer*' -and $_.Value }).Value | Select-Object -First 1
 $os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
 
