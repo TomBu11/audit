@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.8
-# DateTime: 2026-06-22 15:43:43
+# Version: v1.1.9
+# DateTime: 2026-07-10 12:37:18
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -613,7 +613,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.8`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.9`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -985,44 +985,46 @@ $outTable | Format-List
 Write-Out "`n=== Saving output ===`n" -ForegroundColor DarkYellow
 
 $scriptPath = Split-Path -Parent ([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
-Write-Out "Script directory: $scriptPath"
 $outPaths = @(
   $scriptPath
   $rocksaltPath
 ) | Select-Object -Unique
+
+$invalidChars = [RegEx]::Escape([String][System.IO.Path]::GetInvalidFileNameChars())
 
 $bitlockerFile = (
   $(if ($gi -and $gi -ne "GI") { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$computerName Bitlocker " +
   "$bitlockerID.txt"
-)
+) -replace "[$invalidChars]", "_"
 
 $auditHRFile = (
   $(if ($gi -and $gi -ne "GI") { "$gi " } else { "" }) +
   $(if ($name) { "$name " } else { "" }) +
   "$computerName AuditHR.txt"
-)
+) -replace "[$invalidChars]", "_"
 
 foreach ($path in $outPaths) {
+  Write-Out "`nSaving to $path"
+
   $auditPath = Join-Path $path "Audit.txt"
   $line | Out-File -Append -FilePath $auditPath
   Write-Out "Audit information has been appended to $auditPath"
 
   $auditHRPath = Join-Path $path $auditHRFile
   $outTable | Format-List | Out-File -Append -FilePath $auditHRPath
-  Write-Out "Audit table saved to $auditHRPath`n"
   $InstalledSoftware | Select-Object DisplayName, DisplayVersion | Out-File -Append -FilePath $auditHRPath
-  Write-Out "Software list saved to $auditHRPath`n"
+  Write-Out "Audit table and software list saved to $auditHRPath"
 
   if ($bitlocker) {
     $bitlockerPath = Join-Path $path $bitlockerFile
     "$bitlockerID`n$bitlockerKey" | Out-File -FilePath $bitlockerPath
     if (Test-Path $bitlockerPath) {
-      Write-Out "Bitlocker saved to $bitlockerPath`n"
+      Write-Out "Bitlocker saved to $bitlockerPath"
     }
     else {
-      Write-Error "Failed to save Bitlocker info to $bitlockerPath`n"
+      Write-Error "Failed to save Bitlocker info to $bitlockerPath"
     }
   }
 }
