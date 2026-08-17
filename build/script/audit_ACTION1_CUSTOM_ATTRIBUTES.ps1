@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.9
-# DateTime: 2026-07-10 12:37:18
+# Version: v1.1.10
+# DateTime: 2026-08-17 13:46:54
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.9`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.10`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -630,10 +630,10 @@ $ComputerInfo = Get-CommandStatus -Command { Get-ComputerInfo } -Message 'comput
 $RamInfo = Get-CommandStatus -Command { Get-WmiObject -Class Win32_PhysicalMemory } -Message 'RAM'
 $Admins = @( Get-CommandStatus -Command { Get-LocalGroupMember -Group "Administrators" | Select-Object -ExpandProperty Name } -Message 'admins' )
 $Users = @( Get-CommandStatus -Command { Get-LocalGroupMember -Group "Users" | Where-Object {
-      $Admins -notcontains $_.Name -and
-      $_.Name -notmatch "^NT AUTHORITY" -and
-      $_.Name -notmatch "^BUILTIN"
-    } | Select-Object -ExpandProperty Name } -Message 'users' )
+            $Admins -notcontains $_.Name -and
+            $_.Name -notmatch "^NT AUTHORITY" -and
+            $_.Name -notmatch "^BUILTIN"
+        } | Select-Object -ExpandProperty Name } -Message 'users' )
 $PhysicalDisks = Get-CommandStatus -Command { Get-PhysicalDisk | Where-Object { $_.BusType -ne 'USB' } } -Message 'disks'
 $InstalledSoftware = Get-CommandStatus -Command { Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* } -Message 'software'
 $HardwareReadiness = Get-CommandStatus -Command { Invoke-Expression $hardwareReadinessScript 2>&1 | Out-String | ConvertFrom-Json } -Message 'hardware readiness'
@@ -643,60 +643,61 @@ $date = Get-Date -Format "yyyy-MM-dd HH:mm"
 $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
-$serialNumber = $ComputerInfo.BiosSeralNumber
+$macAddress = (Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.MacAddress -and $_.MacAddress -ne "00:00:00:00:00:00" } | Select-Object -ExpandProperty MacAddress) -join ', '
+$serialNumber = $ComputerInfo.BiosSerialNumber
 $os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
 
 $antiVirusProducts = $InstalledSoftware | Where-Object {
-  $_.DisplayName -match "sophos endpoint agent"
+    $_.DisplayName -match "sophos endpoint agent"
 } | Select-Object DisplayName, DisplayVersion
 
 if ($antiVirusProducts) {
-  $antiVirus = ($antiVirusProducts | ForEach-Object {
-      "$($_.DisplayName): $($_.DisplayVersion)"
-    }) -join "; "
+    $antiVirus = ($antiVirusProducts | ForEach-Object {
+            "$($_.DisplayName): $($_.DisplayVersion)"
+        }) -join "; "
 }
 else {
-  $antiVirus = "No"
+    $antiVirus = "No"
 }
 
 $domainName = $ComputerInfo.CsDomain
 $processor = $ComputerInfo.CsProcessors.Name -join ', '
 $ram = "$([math]::Round($ComputerInfo.CsTotalPhysicalMemory / 1GB))GB"
 try {
-  $ramType = Convert-RamMemoryType -MemoryTypeDecimal ($RamInfo[0].SMBIOSMemoryType)
+    $ramType = Convert-RamMemoryType -MemoryTypeDecimal ($RamInfo[0].SMBIOSMemoryType)
 }
 catch {
-  $ramType = "Unknown"
+    $ramType = "Unknown"
 }
 $disk1Size = "$([math]::Round($PhysicalDisks[0].Size / 1GB))GB"
 $disk1Type = "$($PhysicalDisks[0].MediaType) $($PhysicalDisks[0].BusType)"
 if ($PhysicalDisks.Count -gt 1) {
-  $disk2Size = "$([math]::Round($PhysicalDisks[1].Size / 1GB))GB"
-  $disk2Type = "$($PhysicalDisks[1].MediaType) $($PhysicalDisks[1].BusType)"
+    $disk2Size = "$([math]::Round($PhysicalDisks[1].Size / 1GB))GB"
+    $disk2Type = "$($PhysicalDisks[1].MediaType) $($PhysicalDisks[1].BusType)"
 }
 else {
-  $disk2Size = "N/A"
-  $disk2Type = "N/A"
+    $disk2Size = "N/A"
+    $disk2Type = "N/A"
 }
 $chromeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Google Chrome" }).DisplayVersion
 $firefoxVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Mozilla Firefox" }).DisplayVersion
 $edgeVersion = ($InstalledSoftware | Where-Object { $_.DisplayName -eq "Microsoft Edge" }).DisplayVersion
 
 $officeProducts = $InstalledSoftware | Where-Object {
-  $_.DisplayName -match "Office 365|Microsoft 365"
+    $_.DisplayName -match "Office 365|Microsoft 365"
 } | Select-Object DisplayName, DisplayVersion
 
 if ($officeProducts) {
-  $office365Version = ($officeProducts | ForEach-Object {
-      "$($_.DisplayName): $($_.DisplayVersion)"
-    }) -join "; "
+    $office365Version = ($officeProducts | ForEach-Object {
+            "$($_.DisplayName): $($_.DisplayVersion)"
+        }) -join "; "
 }
 else {
-  $office365Version = "Not installed"
+    $office365Version = "Not installed"
 }
 
 if ($physicalDisks.Count -gt 2) {
-  Write-Warning "More than 2 disks detected"
+    Write-Warning "More than 2 disks detected"
 }
 
 
@@ -886,6 +887,7 @@ $outTable = [PSCustomObject]@{
   Model            = "$model"
   Type             = "$type"
   SerialNumber     = "$serialNumber"
+  MacAddress       = "$macAddress"
   OS               = "$os"
   Win11Compatible  = "$win11Comp"
   AntiVirus        = "$antiVirus"

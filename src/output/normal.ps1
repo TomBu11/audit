@@ -9,6 +9,7 @@ $outTable = [PSCustomObject]@{
   Model            = "$model"
   Type             = "$type"
   SerialNumber     = "$serialNumber"
+  MacAddress       = "$macAddress"
   OS               = "$os"
   Win11Compatible  = "$win11Comp"
   Updates          = "$updates"
