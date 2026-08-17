@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Version: v1.1.10
-# DateTime: 2026-08-17 13:46:54
+# Version: v1.1.11
+# DateTime: 2026-08-17 14:21:00
 
 $hardwareReadinessScript = @'
 #=============================================================================================================================
@@ -606,7 +606,7 @@ function Read-No($prompt) {
 
 <# INITIAL SETUP #>
 
-Write-Out "Audit script version v1.1.10`n" -ForegroundColor Green
+Write-Out "Audit script version v1.1.11`n" -ForegroundColor Green
 
 $global:warnings = @()
 
@@ -644,7 +644,7 @@ $manufacturer = $ComputerInfo.CsManufacturer
 $model = "$($ComputerInfo.CsSystemFamily), $($ComputerInfo.CsModel)"
 $type = if ($ComputerInfo.CsPCSystemType -eq 2) { "Laptop" } else { "Desktop" }
 $macAddress = (Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.MacAddress -and $_.MacAddress -ne "00:00:00:00:00:00" } | Select-Object -ExpandProperty MacAddress) -join ', '
-$serialNumber = $ComputerInfo.BiosSerialNumber
+$serialNumber = ($ComputerInfo.PSObject.Properties | Where-Object { $_.Name -like 'BiosSer*' -and $_.Value }).Value | Select-Object -First 1
 $os = "$($ComputerInfo.OSName) ($((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").DisplayVersion)) Build $($ComputerInfo.OSBuildNumber) $($ComputerInfo.OSArchitecture)"
 
 $antiVirusProducts = $InstalledSoftware | Where-Object {

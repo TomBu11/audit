@@ -23,7 +23,6 @@ release: clean
 	echo 0 > $(DEV_BUILD_FILE); \
 	echo "Release build: v$$VERSION"; \
 	$(MAKE) build VERSION="v$$VERSION"
-	git tag -a "v$$VERSION" -m "Release v$$VERSION"
 
 build: $(VERSIONS:%=build/script/audit_%.ps1)
 	@echo "\nBuilt as version: $(VERSION)"
