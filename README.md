@@ -30,9 +30,7 @@ https://github.com/TomBu11/audit/releases
 
 The executable is also available on the Rocksalt Google Drive:
 
-```text
-G:\Shared drives\Rocksalt Internal\Audit Script\v1.1.8\audit.exe
-```
+[G:\Shared drives\Rocksalt Internal\Audit Script\v1.1.12\audit.exe](https://drive.google.com/drive/folders/16wOycHc0QS4ZO-7gZ7zv579AWtxQpwJC)
 
 When prompted for administrator privileges, select **Yes** or provide administrator credentials.
 
